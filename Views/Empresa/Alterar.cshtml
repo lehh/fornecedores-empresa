@@ -1,14 +1,14 @@
-﻿@model FornecedoresEmpresa.ViewModel.EmpresaViewModelCadastro
+﻿@model FornecedoresEmpresa.ViewModel.EmpresaViewModelAlterar
 
 @{
-    ViewData["Title"] = "Cadastrar";
+    ViewData["Title"] = "Alterar Empresa";
 }
 
-<h1>Cadastrar Empresa</h1>
+<h1>Alterar Empresa @Model.NomeFantasia</h1>
 
 @TempData["Mensagem"]
 
-@using (Html.BeginForm("Cadastrar", "Empresa", FormMethod.Post))
+@using (Html.BeginForm("Alterar", "Empresa", FormMethod.Post))
 {
     @Html.LabelFor(m => m.NomeFantasia)
 
@@ -28,7 +28,8 @@
 
     @Html.ValidationMessageFor(m => m.Cnpj)
 
-    <button type="submit">Cadastrar</button>
+    <button type="submit">Alterar</button>
 }
 
 <a href="@Url.ActionLink("Index")">Voltar</a>
+

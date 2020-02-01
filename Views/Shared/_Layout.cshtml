@@ -7,7 +7,6 @@
     <title>@ViewData["Title"] - FornecedoresEmpresa</title>
 
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
-    @*<link rel="stylesheet" href="~/css/site.css" />*@
 
     @RenderSection("Head", required: false)
 </head>
@@ -17,6 +16,7 @@
             <ul class="navbar-nav">
                 <li class="nav-item active">
                     <a class="nav-link navbar-brand" href="@Url.Action("Index", "Empresa")">Empresas <span class="sr-only">(current)</span></a>
+                    <a class="nav-link navbar-brand" href="@Url.Action("Index", "Fornecedor")">Fornecedores</a>
                 </li>
             </ul>
         </nav>
@@ -36,7 +36,7 @@
         @RenderBody()
     </div>
 
-    <script src="~/lib/jquery/jquery-3.4.1.min.js"></script>
+    <script src="~/lib/jquery/jquery.min.js"></script>
     <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
 
     @RenderSection("Scripts", required: false)

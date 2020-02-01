@@ -35,10 +35,13 @@ namespace FornecedoresEmpresa.ViewModel
             ListaFornecedor = new List<Fornecedor>();
         }
 
-        public int Id { get; set; }
-
         public DateTime DataCadastro { get; set; }
 
         public List<Fornecedor> ListaFornecedor { get; set; }
+    }
+
+    public class EmpresaViewModelAlterar : EmpresaViewModel
+    {
+        public int Id { get; set; }
     }
 }

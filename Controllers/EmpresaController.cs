@@ -28,13 +28,40 @@ namespace FornecedoresEmpresa.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Detalhes(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var empresa = await new EmpresaDados(Sessao).BuscarPorId((int)id);
+
+            if (empresa == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var model = new EmpresaViewModelDetalhes()
+            {
+                NomeFantasia = empresa.NomeFantasia,
+                Uf = empresa.Uf,
+                Cnpj = empresa.Cnpj,
+                ListaFornecedor = empresa.Fornecedores.ToList(),
+                DataCadastro = empresa.DataCadastro
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
         public IActionResult Cadastrar()
         {
             return View(new EmpresaViewModelCadastro());
         }
 
         [HttpPost]
-        public async Task<IActionResult> Cadastrar(EmpresaViewModelCadastro model)
+        public IActionResult Cadastrar(EmpresaViewModelCadastro model)
         {
             if (!ModelState.IsValid)
             {
@@ -58,26 +85,96 @@ namespace FornecedoresEmpresa.Controllers
                 TempData["Mensagem"] = "Erro " + ex.Message;
                 return View(model);
             }
-            
-            return View("Index");
+
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
-        public async Task<IActionResult> Detalhes(int id) 
+        public async Task<IActionResult> Alterar(int? id)
         {
-            var empresa = await new EmpresaDados(Sessao).BuscarPorId(id);
-
-            var model = new EmpresaViewModelDetalhes()
+            if (id == null)
             {
-                Id = empresa.Id,
-                NomeFantasia = empresa.NomeFantasia,
-                Uf = empresa.Uf,
+                return RedirectToAction("Index");
+            }
+
+            var empresa = await new EmpresaDados(Sessao).BuscarPorId((int)id);
+
+            if (empresa == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var model = new EmpresaViewModelAlterar()
+            {
                 Cnpj = empresa.Cnpj,
-                ListaFornecedor = empresa.Fornecedores.ToList(),
-                DataCadastro = empresa.DataCadastro
+                NomeFantasia = empresa.NomeFantasia,
+                Uf = empresa.Uf
             };
 
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Alterar(EmpresaViewModelAlterar model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var empresaDados = new EmpresaDados(Sessao);
+            var empresa = await empresaDados.BuscarPorId(model.Id);
+
+            if (empresa == null)
+            {
+                TempData["Mensagem"] = "Empresa não encontrada";
+                return RedirectToAction("Index");
+            }
+
+            empresa.Id = model.Id;
+            empresa.NomeFantasia = model.NomeFantasia;
+            empresa.Cnpj = model.Cnpj;
+            empresa.Uf = model.Uf;
+            empresa.DataModificacao = DateTime.Now;
+
+            try
+            {
+                empresaDados.Alterar(empresa);
+            }
+            catch (Exception ex)
+            {
+                TempData["Mensagem"] = "Erro " + ex.Message;
+                return View(model);
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Excluir(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var empresaDados = new EmpresaDados(Sessao);
+            var empresa = await empresaDados.BuscarPorId((int)id);
+
+            if (empresa == null) 
+            {
+                return RedirectToAction("Index");
+            }
+
+            try
+            {
+                empresaDados.Excluir(empresa);
+            }
+            catch (Exception ex)
+            {
+                TempData["Mensagem"] = "Erro " + ex.Message;
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }
