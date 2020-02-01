@@ -15,4 +15,10 @@
     <PackageReference Include="System.Data.SQLite" Version="1.0.112" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\css\" />
+    <Folder Include="wwwroot\js\" />
+    <Folder Include="wwwroot\lib\jquery-validation-unobtrusive\" />
+  </ItemGroup>
+
 </Project>
