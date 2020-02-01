@@ -1,0 +1,24 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace FornecedoresEmpresa.Models
+{
+    public class Empresa
+    {
+        public virtual string Id { get; set; }
+
+        public virtual string Uf { get; set; }
+
+        public virtual string NomeFantasia { get; set; }
+
+        public virtual string Cnpj { get; set; }
+
+        public virtual DateTime DataCadastro { get; set; }
+
+        public virtual DateTime DataModificacao { get; set; }
+
+        public virtual ISet<Fornecedor> Fornecedores { get; set; }
+    }
+}
