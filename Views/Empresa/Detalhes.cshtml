@@ -1,0 +1,53 @@
+﻿@model FornecedoresEmpresa.ViewModel.EmpresaViewModelDetalhes
+
+@{
+    ViewData["Title"] = "Detalhes";
+    var temFornecedores = Model.ListaFornecedor.Count() > 0;
+}
+
+<h1>Detalhes da empresa @Model.NomeFantasia</h1>
+
+<p>
+    UF: @Model.Uf <br />
+    CNPJ: @Model.Cnpj <br />
+    Data de Cadastro: @Model.DataCadastro
+</p>
+
+<h2>Fornecedores</h2>
+
+@if (temFornecedores)
+{
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>CPF/CNPJ</th>
+                <th>RG</th>
+                <th>Data de Nascimento</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var fornecedor in Model.ListaFornecedor)
+            {
+                <tr>
+                    <td>@fornecedor.Nome</td>
+                    <td>@(fornecedor.Cnpj == null ? fornecedor.Cpf : fornecedor.Cnpj)</td>
+                    <td>@fornecedor.Rg</td>
+                    <td>@(fornecedor.DataNascimento.HasValue ? fornecedor.DataNascimento.Value.ToShortDateString() : "")</td>
+                    <td>
+                        @Html.ActionLink("Remover", "RemoverAssociacao", new { id = fornecedor.Id })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@if (!temFornecedores)
+{
+    <p>Não há fornecedores para serem mostrados</p>
+}
+
+
+<a href="@Url.ActionLink("Index")">Voltar</a>

@@ -1,0 +1,35 @@
+﻿@model IEnumerable<FornecedoresEmpresa.Models.Empresa>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Empresa</h1>
+
+<a href="@Url.ActionLink("Cadastrar")"> Cadastrar Empresa </a>
+
+<table class="table" border="1">
+    <thead>
+        <tr>
+            <th>Nome Fantasia</th>
+            <th>UF</th>
+            <th>CNPJ</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var empresa in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => empresa.NomeFantasia)</td>
+                <td>@Html.DisplayFor(modelItem => empresa.Uf)</td>
+                <td>@Html.DisplayFor(modelItem => empresa.Cnpj)</td>
+                <td>
+                    @Html.ActionLink("Detalhes", "Detalhes", new { id = empresa.Id }) |
+                    @Html.ActionLink("Alterar", "Alterar", new { id = empresa.Id }) |
+                    @Html.ActionLink("Excluir", "Excluir", new { id = empresa.Id })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

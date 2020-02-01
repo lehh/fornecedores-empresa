@@ -1,0 +1,34 @@
+﻿@model FornecedoresEmpresa.ViewModel.EmpresaViewModelCadastro
+
+@{
+    ViewData["Title"] = "Cadastrar";
+}
+
+<h1>Cadastrar Empresa</h1>
+
+@TempData["Mensagem"]
+
+@using (Html.BeginForm("Cadastrar", "Empresa", FormMethod.Post))
+{
+    @Html.LabelFor(m => m.NomeFantasia)
+
+    @Html.EditorFor(m => m.NomeFantasia)
+
+    @Html.ValidationMessageFor(m => m.NomeFantasia)
+
+    @Html.LabelFor(m => m.Uf)
+
+    @Html.EditorFor(m => m.Uf)
+
+    @Html.ValidationMessageFor(m => m.Uf)
+
+    @Html.LabelFor(m => m.Cnpj)
+
+    @Html.EditorFor(m => m.Cnpj)
+
+    @Html.ValidationMessageFor(m => m.Cnpj)
+
+    <button type="submit">Submit</button>
+}
+
+<a href="@Url.ActionLink("Index")">Voltar</a>

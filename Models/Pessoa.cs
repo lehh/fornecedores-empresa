@@ -21,6 +21,6 @@ namespace FornecedoresEmpresa.Models
 
         public virtual DateTime DataCadastro { get; set; }
 
-        public virtual DateTime DataModificacao { get; set; }
+        public virtual Nullable<DateTime> DataModificacao { get; set; }
     }
 }
