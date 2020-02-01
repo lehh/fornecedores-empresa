@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using FornecedoresEmpresa.db;
 using Microsoft.Extensions.Configuration;
 
 namespace FornecedoresEmpresa
@@ -26,13 +25,8 @@ namespace FornecedoresEmpresa
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = Configuration.GetConnectionString("dbFornecedoresEmpresa");
-            var sessionFactory = new Factory(connectionString).GetSessionFactory();
 
-            services.AddScoped(factory =>
-            {
-                return sessionFactory.OpenSession();
-            });
-
+            services.AddNHibernate(connectionString);
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using FluentNHibernate.Mapping;
 using FornecedoresEmpresa.Models;
 
-namespace FornecedoresEmpresa.Mapeamento
+namespace FornecedoresEmpresa.Data.Mapeamento
 {
     public class TelefoneFornecedorMap : ClassMap<TelefoneFornecedor>
     {

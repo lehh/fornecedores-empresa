@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using FornecedoresEmpresa.Data.Persistencia;
 using NHibernate;
-using FornecedoresEmpresa;
 
 namespace FornecedoresEmpresa.Controllers
 {
@@ -16,9 +16,12 @@ namespace FornecedoresEmpresa.Controllers
             this.sessao = sessao;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var teste = sessao.Query<Models.Fornecedor>().ToList();
+            var fornecedor = new FornecedorDados(sessao);
+
+            var teste = await fornecedor.ListarTodos();
+
             return View(teste);
         }
     }
