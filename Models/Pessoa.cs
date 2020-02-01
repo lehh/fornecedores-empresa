@@ -7,7 +7,7 @@ namespace FornecedoresEmpresa.Models
 {
     public abstract class Pessoa
     {
-        public virtual string Id { get; set; }
+        public virtual int Id { get; set; }
 
         public virtual string Nome { get; set; }
 

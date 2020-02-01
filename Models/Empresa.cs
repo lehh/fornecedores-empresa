@@ -7,7 +7,7 @@ namespace FornecedoresEmpresa.Models
 {
     public class Empresa
     {
-        public virtual string Id { get; set; }
+        public virtual int Id { get; set; }
 
         public virtual string Uf { get; set; }
 
