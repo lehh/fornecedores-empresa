@@ -77,6 +77,34 @@ namespace FornecedoresEmpresa.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Excluir(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var fornecedorDados = new FornecedorDados(Sessao);
+            var fornecedor = await fornecedorDados.BuscarPorId((int)id);
+
+            if (fornecedor == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            try
+            {
+                fornecedorDados.Excluir(fornecedor);
+            }
+            catch (Exception ex)
+            {
+                TempData["Mensagem"] = "Erro " + ex.Message;
+            }
+
+            return RedirectToAction("Index");
+        }
+
         public ViewResult AdicionarTelefone(int indice, string nomeLista, string divId)
         {
             var model = new TelefoneFornecedorPartialViewModel()
