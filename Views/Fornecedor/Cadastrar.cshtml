@@ -2,6 +2,49 @@
 
 @{
     ViewData["Title"] = "Cadastrar Fornecedor";
+    var nomeLista = nameof(Model.ListaTelefoneFornecedor);
+    var contadorTelefone = 0;
+    var prefixoDivId = "telefone";
+}
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            adicionaEventoBtnRemover();
+
+            $("#adicionarTelefone").on("click", function (event) {
+                event.preventDefault();
+                let nomeLista = "@nomeLista";
+                let indice = $(".telefones").length;
+                let divId = "@prefixoDivId" + indice;
+
+                $.ajax({
+                    url: this.href,
+                    data: { indice, nomeLista, divId },
+                    cache: false,
+                    success: function (html) { $("#telefonesDiv").append(html); },
+                    error: function (error) { console.log(error) }
+                });
+            });
+
+            $("#remover-telefone0").remove();
+
+        });
+
+        $(document).ajaxComplete(function () {
+            adicionaEventoBtnRemover();
+        });
+
+        function adicionaEventoBtnRemover()
+        {
+            $(".btnRemover").on("click", function (event) {
+                event.preventDefault();
+                let name = this.id.split("-");
+                $("#" + name[1]).remove();
+           });
+        }
+    </script>
 }
 
 <h1>Cadastrar Fornecedor</h1>
@@ -22,6 +65,12 @@
 
     @Html.ValidationMessageFor(m => m.Cpf)
 
+    @Html.LabelFor(m => m.Rg)
+
+    @Html.EditorFor(m => m.Rg)
+
+    @Html.ValidationMessageFor(m => m.Rg)
+
     @Html.LabelFor(m => m.Cnpj)
 
     @Html.EditorFor(m => m.Cnpj)
@@ -33,6 +82,24 @@
     @Html.EditorFor(m => m.DataNascimento)
 
     @Html.ValidationMessageFor(m => m.DataNascimento)
+
+    <a href="@Url.ActionLink("AdicionarTelefone")" id="adicionarTelefone">addTel</a>
+
+    <div id="telefonesDiv">
+        @foreach (var telefone in Model.ListaTelefoneFornecedor)
+        {
+            telefone.NomeLista = nomeLista;
+            telefone.Indice = contadorTelefone;
+            telefone.DivId = prefixoDivId + contadorTelefone;
+
+            {
+                await Html.RenderPartialAsync("_TelefoneFornecedor", telefone);
+            }
+
+            contadorTelefone++;
+        }
+    </div>
+
 
     <button type="submit">Cadastrar</button>
 }

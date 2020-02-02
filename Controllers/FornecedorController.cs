@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using NHibernate;
 using FornecedoresEmpresa.Data.Persistencia;
@@ -30,7 +31,10 @@ namespace FornecedoresEmpresa.Controllers
         [HttpGet]
         public IActionResult Cadastrar()
         {
-            return View(new FornecedorViewModelCadastro());
+            var model = new FornecedorViewModelCadastro();
+            model.ListaTelefoneFornecedor.Add(new TelefoneFornecedorPartialViewModel());
+
+            return View(model);
         }
 
         [HttpPost]
@@ -41,20 +45,24 @@ namespace FornecedoresEmpresa.Controllers
                 return View(model);
             }
 
+            var setTelefoneFornecedor = new TelefoneFornecedorRegras(Sessao)
+                                        .CriaTelefoneFornecedores(model.ListaTelefoneFornecedor);
+
             var fornecedor = new Fornecedor()
             {
                 Nome = model.Nome,
                 Cpf = model.Cpf,
                 Cnpj = model.Cnpj,
+                Rg = model.Rg,
                 DataNascimento = model.DataNascimento,
-                DataCadastro = DateTime.Now
+                Telefones = setTelefoneFornecedor
             };
 
             try
             {
                 var fornecedorDados = new FornecedorDados(Sessao);
                 new FornecedorRegras(fornecedorDados).Cadastrar(fornecedor);
-                
+
                 return RedirectToAction("Index");
             }
             catch (UsuarioException uex)
@@ -67,6 +75,18 @@ namespace FornecedoresEmpresa.Controllers
             }
 
             return View(model);
+        }
+
+        public ViewResult AdicionarTelefone(int indice, string nomeLista, string divId)
+        {
+            var model = new TelefoneFornecedorPartialViewModel()
+            {
+                DivId = divId,
+                NomeLista = nomeLista,
+                Indice = indice
+            };
+
+            return View("_TelefoneFornecedor", model);
         }
     }
 }

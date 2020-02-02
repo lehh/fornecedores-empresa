@@ -15,7 +15,7 @@ namespace FornecedoresEmpresa.Data.Mapeamento
 
             Id(t => t.Id, "id").GeneratedBy.Identity();
 
-            Map(t => t.Numero).Not.Nullable();
+            Map(t => t.Numero, "numero").Length(15).Not.Nullable();
 
             References(t => t.Fornecedor).Column("id_fornecedor").Not.Nullable();
         }

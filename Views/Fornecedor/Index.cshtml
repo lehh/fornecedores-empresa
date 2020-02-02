@@ -24,10 +24,12 @@
 <table class="table" border="1">
     <thead>
         <tr>
+            <th>Id</th>
             <th>Nome</th>
             <th>CNPJ/CPF</th>
             <th>RG</th>
             <th>Data de Nascimento</th>
+            <th>Telefones</th>
             <th>Ações</th>
         </tr>
     </thead>
@@ -35,10 +37,17 @@
         @foreach (var fornecedor in Model)
         {
             <tr>
+                <td>@fornecedor.Id</td>
                 <td>@fornecedor.Nome</td>
                 <td>@(fornecedor.Cnpj == null ? fornecedor.Cpf : fornecedor.Cnpj)</td>
                 <td>@fornecedor.Rg</td>
                 <td>@(fornecedor.DataNascimento.HasValue ? fornecedor.DataNascimento.Value.ToShortDateString() : "")</td>
+                <td>
+                    @foreach (var telefone in fornecedor.Telefones)
+                    {
+                        @(telefone.Numero)
+                    }
+                </td>
                 <td>
                     @Html.ActionLink("Alterar", "Alterar", new { id = fornecedor.Id }) |
                     <button type="button" data-toggle="modal" data-target="#modalExcluir" data-id="@fornecedor.Id" class="btn btn-sm btn-danger">Excluir</button>

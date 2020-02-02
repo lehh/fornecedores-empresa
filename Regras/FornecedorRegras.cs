@@ -14,17 +14,22 @@ namespace FornecedoresEmpresa.Regras
             this.fornecedorDados = fornecedorDados;
         }
 
-        public bool Cadastrar(Fornecedor fornecedor)
+        public void Cadastrar(Fornecedor fornecedor)
         {
             FornecedorValido(fornecedor);
 
-            fornecedorDados.Inserir(fornecedor);
+            fornecedor = AdicionaTelefoneFornecedor(fornecedor);
 
-            return true;
+            fornecedorDados.Inserir(fornecedor);
         }
 
         private void FornecedorValido(Fornecedor fornecedor)
         {
+            if (fornecedor.Cnpj == null && fornecedor.Cpf == null)
+            {
+                throw new UsuarioException("Preencha o CPF ou CNPJ");
+            }
+
             if (fornecedor.Cnpj != null && fornecedor.Cpf != null)
             {
                 throw new UsuarioException("Preencha apenas o CNPJ ou CPF");
@@ -34,6 +39,21 @@ namespace FornecedoresEmpresa.Regras
             {
                 throw new UsuarioException("Preencha a data de nascimento e o RG");
             }
+
+            if (fornecedor.Telefones.Count <= 0)
+            {
+                throw new UsuarioException("Informe ao menos um telefone");
+            }
+        }
+
+        private Fornecedor AdicionaTelefoneFornecedor(Fornecedor fornecedor)
+        {
+            foreach (var telefone in fornecedor.Telefones)
+            {
+                telefone.Fornecedor = fornecedor;
+            }
+
+            return fornecedor;
         }
     }
 }
