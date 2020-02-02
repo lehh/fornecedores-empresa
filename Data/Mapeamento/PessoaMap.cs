@@ -20,7 +20,7 @@ namespace FornecedoresEmpresa.Data.Mapeamento
             Map(p => p.Cpf, "cpf").Length(11).Nullable();
             Map(p => p.Rg, "rg").Length(14).Nullable();
             Map(p => p.DataNascimento, "data_nascimento").Nullable();
-            Map(e => e.DataCadastro, "data_cadastro").Not.Nullable();
+            Map(e => e.DataCadastro, "data_cadastro").Default("getdate()").Not.Nullable();
             Map(e => e.DataModificacao, "data_modificacao").Nullable();
         }
     }
