@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using FornecedoresEmpresa.Data.Persistencia;
 using FornecedoresEmpresa.Models;
 using FornecedoresEmpresa.Utils;
@@ -14,22 +15,26 @@ namespace FornecedoresEmpresa.Regras
             this.fornecedorDados = fornecedorDados;
         }
 
-        public void Cadastrar(Fornecedor fornecedor)
+        public async Task<bool> CadastrarAsync(Fornecedor fornecedor)
         {
             FornecedorValido(fornecedor);
 
-            fornecedor = AdicionaTelefoneFornecedor(fornecedor);
+            fornecedor = await AdicionaTelefoneFornecedorAsync(fornecedor);
 
             fornecedorDados.Inserir(fornecedor);
+
+            return true;
         }
 
-        public void Alterar(Fornecedor fornecedor)
+        public async Task<bool> AlterarAsync(Fornecedor fornecedor)
         {
             FornecedorValido(fornecedor);
 
-            fornecedor = AdicionaTelefoneFornecedor(fornecedor);
+            fornecedor = await AdicionaTelefoneFornecedorAsync(fornecedor);
 
-            fornecedorDados.Alterar(fornecedor);
+            await fornecedorDados.Alterar(fornecedor);
+
+            return true;
         }
 
         private void FornecedorValido(Fornecedor fornecedor)
@@ -55,7 +60,7 @@ namespace FornecedoresEmpresa.Regras
             }
         }
 
-        private Fornecedor AdicionaTelefoneFornecedor(Fornecedor fornecedor)
+        private async Task<Fornecedor> AdicionaTelefoneFornecedorAsync(Fornecedor fornecedor)
         {
             foreach (var telefone in fornecedor.Telefones)
             {

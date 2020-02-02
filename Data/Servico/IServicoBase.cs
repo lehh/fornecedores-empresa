@@ -13,7 +13,7 @@ namespace FornecedoresEmpresa.Data.Servico
 
         void Excluir(T objeto);
 
-        void Alterar(T objeto);
+        Task<bool> Alterar(T objeto);
 
         Task<ICollection<T>> ListarTodos();
 

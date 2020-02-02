@@ -5,6 +5,8 @@ using FornecedoresEmpresa.Models;
 using FornecedoresEmpresa.ViewModel;
 using FornecedoresEmpresa.Utils;
 using NHibernate;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FornecedoresEmpresa.Regras
 {
@@ -12,17 +14,12 @@ namespace FornecedoresEmpresa.Regras
     {
         private readonly TelefoneFornecedorDados telefoneFornecedorDados;
 
-        public TelefoneFornecedorRegras(TelefoneFornecedorDados telefoneFornecedorDados)
-        {
-            this.telefoneFornecedorDados = telefoneFornecedorDados;
-        }
-
         public TelefoneFornecedorRegras(ISession sessao)
         {
             this.telefoneFornecedorDados = new TelefoneFornecedorDados(sessao);
         }
 
-        public HashSet<TelefoneFornecedor> CriaTelefoneFornecedores(IEnumerable<TelefoneFornecedorViewModel> listaModel) 
+        public HashSet<TelefoneFornecedor> CriaTelefoneFornecedores(IEnumerable<TelefoneFornecedorViewModel> listaModel)
         {
             var setTelefoneFornecedor = new HashSet<TelefoneFornecedor>();
 
@@ -41,6 +38,24 @@ namespace FornecedoresEmpresa.Regras
             }
 
             return setTelefoneFornecedor;
+        }
+
+        public async Task<int> ExcluiTelefonesFornecedorAsync(
+            ISet<TelefoneFornecedor> listaTelefoneAtual,
+            ISet<TelefoneFornecedor> listaTelefoneAtualizado
+        )
+        {
+            var listaIdParaExcluir = listaTelefoneAtual
+                        .Where(telefone => !listaTelefoneAtualizado.Select(t => t.Id).Contains(telefone.Id))
+                        .Select(telefone => telefone.Id)
+                        .ToList();
+
+            if (listaIdParaExcluir.Count > 0)
+            {
+               return await telefoneFornecedorDados.ExcluirVariosAsync(listaIdParaExcluir);
+            }
+
+            return 0;
         }
 
         private bool ValidaNumeroTelefone(string numeroTelefone)

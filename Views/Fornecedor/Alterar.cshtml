@@ -9,9 +9,10 @@
 
 @section scripts
 {
+    <script async src="~/js/fornecedor.js"></script>
     <script>
         $(document).ready(function () {
-            adicionaEventoBtnRemover();
+            escondeBotoes();
 
             $("#adicionarTelefone").on("click", function (event) {
                 event.preventDefault();
@@ -19,30 +20,18 @@
                 let indice = $(".telefones").length;
                 let divId = "@prefixoDivId" + indice;
 
-                $.ajax({
-                    url: this.href,
-                    data: { indice, nomeLista, divId },
-                    cache: false,
-                    success: function (html) { $("#telefonesDiv").append(html); },
-                    error: function (error) { console.log(error) }
-                });
+                ajaxAdicionaTelefone(this.href, nomeLista, indice, divId);
             });
 
-            $("#remover-telefone0").remove();
-
         });
 
-        $(document).ajaxComplete(function () {
-            adicionaEventoBtnRemover();
-        });
-
-        function adicionaEventoBtnRemover()
-        {
-            $(".btnRemover").on("click", function (event) {
-                event.preventDefault();
-                let name = this.id.split("-");
-                $("#" + name[1]).remove();
-           });
+        function escondeBotoes() {
+            let i = 1;
+            let indice = $(".telefones").length;
+            while (i < indice - 1) {
+                $(`#remover-telefone${i}`).hide();
+                i++;
+            }
         }
     </script>
 }

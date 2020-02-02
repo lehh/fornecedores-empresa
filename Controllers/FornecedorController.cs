@@ -8,6 +8,7 @@ using FornecedoresEmpresa.ViewModel;
 using FornecedoresEmpresa.Models;
 using FornecedoresEmpresa.Regras;
 using FornecedoresEmpresa.Utils;
+using System.Linq;
 
 namespace FornecedoresEmpresa.Controllers
 {
@@ -61,7 +62,7 @@ namespace FornecedoresEmpresa.Controllers
             try
             {
                 var fornecedorDados = new FornecedorDados(Sessao);
-                new FornecedorRegras(fornecedorDados).Cadastrar(fornecedor);
+                new FornecedorRegras(fornecedorDados).CadastrarAsync(fornecedor);
 
                 return RedirectToAction("Index");
             }
@@ -126,28 +127,30 @@ namespace FornecedoresEmpresa.Controllers
                 return View(model);
             }
 
-            var fornecedorDados = new FornecedorDados(Sessao);
-            var fornecedor = await fornecedorDados.BuscarPorId(model.Id);
-
-            if (fornecedor == null)
-            {
-                TempData["Mensagem"] = "Fornecedor não encontrado";
-                return RedirectToAction("Index");
-            }
-
-            var setTelefoneFornecedor = new TelefoneFornecedorRegras(Sessao)
-                                        .CriaTelefoneFornecedores(model.ListaTelefoneFornecedor);
-
-            fornecedor.Nome = model.Nome;
-            fornecedor.Rg = model.Rg;
-            fornecedor.Cpf = model.Cpf;
-            fornecedor.Cnpj = model.Cnpj;
-            fornecedor.DataNascimento = model.DataNascimento;
-            fornecedor.Telefones = setTelefoneFornecedor;
-
             try
             {
-                new FornecedorRegras(fornecedorDados).Alterar(fornecedor);
+                var fornecedorDados = new FornecedorDados(Sessao);
+                var fornecedor = await fornecedorDados.BuscarPorId(model.Id);
+
+                if (fornecedor == null)
+                {
+                    TempData["Mensagem"] = "Fornecedor não encontrado";
+                    return RedirectToAction("Index");
+                }
+
+                var telefoneFornecedorRegras = new TelefoneFornecedorRegras(Sessao);
+
+                var setTelefoneFornecedor = telefoneFornecedorRegras.CriaTelefoneFornecedores(model.ListaTelefoneFornecedor);
+                await telefoneFornecedorRegras.ExcluiTelefonesFornecedorAsync(fornecedor.Telefones, setTelefoneFornecedor);
+
+                fornecedor.Nome = model.Nome;
+                fornecedor.Rg = model.Rg;
+                fornecedor.Cpf = model.Cpf;
+                fornecedor.Cnpj = model.Cnpj;
+                fornecedor.DataNascimento = model.DataNascimento;
+                fornecedor.Telefones = setTelefoneFornecedor;
+
+                await new FornecedorRegras(fornecedorDados).AlterarAsync(fornecedor);
 
                 return RedirectToAction("Index");
             }
@@ -157,7 +160,7 @@ namespace FornecedoresEmpresa.Controllers
             }
             catch (Exception ex)
             {
-                TempData["Mensagem"] = "Erro " + ex.Message; 
+                TempData["Mensagem"] = "Erro Interno: " + ex.Message;
             }
 
             return View(model);

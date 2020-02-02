@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FornecedoresEmpresa.Data.Servico;
 using NHibernate;
@@ -19,18 +20,20 @@ namespace FornecedoresEmpresa.Data.Persistencia
             this.Sessao = sessao;
         }
 
-        public async void Alterar(T objeto)
+        public async Task<bool> Alterar(T objeto)
         {
             ITransaction transacao = Sessao.BeginTransaction();
 
             try
             { 
                 await Sessao.MergeAsync(objeto);
-                transacao.Commit();
+                await transacao.CommitAsync();
+
+                return true;
             }
             catch
             {
-                transacao.Rollback();
+                await transacao.RollbackAsync();
                 throw;
             }
         }
