@@ -131,7 +131,6 @@ namespace FornecedoresEmpresa.Controllers
                 return RedirectToAction("Index");
             }
 
-            empresa.Id = model.Id;
             empresa.NomeFantasia = model.NomeFantasia;
             empresa.Cnpj = model.Cnpj;
             empresa.Uf = model.Uf;

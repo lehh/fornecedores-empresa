@@ -1,15 +1,18 @@
 ﻿@model FornecedoresEmpresa.ViewModel.TelefoneFornecedorPartialViewModel
 
 @{
-    var name = Model.NomeLista + "[" + Model.Indice + "]." + nameof(Model.Numero);
+    var name = Model.NomeLista + "[" + Model.Indice + "].";
+    var nameNumero = name + nameof(Model.Numero);
+    var nameId = name + nameof(Model.Id);
     Layout = "";
 }
 <div id="@Model.DivId">
+    @Html.Hidden((string)nameId, Model.Id)
     @Html.LabelFor(m => m.Numero)
 
-    @Html.EditorFor(m => m.Numero, "name", (string)name, new { htmlAttributes = new { @class = "form-control telefones" } })
+    @Html.EditorFor(m => m.Numero, "name", (string)nameNumero, new { htmlAttributes = new { @class = "form-control telefones" } })
 
     <button id="remover-@Model.DivId" class="btnRemover">x</button>
 
-    @Html.ValidationMessageFor(m => m.Numero, null, new { @data_valmsg_for = (string)name })
+    @Html.ValidationMessageFor(m => m.Numero, null, new { @data_valmsg_for = (string)nameNumero })
 </div>

@@ -8,6 +8,8 @@ namespace FornecedoresEmpresa.ViewModel
 {
     public class TelefoneFornecedorViewModel
     {
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "Preencha o número de telefone")]
         [Display(Name = "Número")]
         public string Numero { get; set; }

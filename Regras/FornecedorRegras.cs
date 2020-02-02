@@ -23,6 +23,15 @@ namespace FornecedoresEmpresa.Regras
             fornecedorDados.Inserir(fornecedor);
         }
 
+        public void Alterar(Fornecedor fornecedor)
+        {
+            FornecedorValido(fornecedor);
+
+            fornecedor = AdicionaTelefoneFornecedor(fornecedor);
+
+            fornecedorDados.Alterar(fornecedor);
+        }
+
         private void FornecedorValido(Fornecedor fornecedor)
         {
             if (fornecedor.Cnpj == null && fornecedor.Cpf == null)

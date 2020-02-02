@@ -48,4 +48,9 @@ namespace FornecedoresEmpresa.ViewModel
     {
 
     }
+
+    public class FornecedorViewModelAlterar : FornecedorViewModel
+    {
+        public int Id { get; set; }
+    }
 }

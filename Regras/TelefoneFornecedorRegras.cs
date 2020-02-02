@@ -35,7 +35,8 @@ namespace FornecedoresEmpresa.Regras
 
                 setTelefoneFornecedor.Add(new TelefoneFornecedor()
                 {
-                    Numero = telefone.Numero
+                    Numero = telefone.Numero,
+                    Id = telefone.Id
                 });
             }
 
