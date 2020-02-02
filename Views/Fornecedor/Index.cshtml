@@ -1,0 +1,69 @@
+﻿@model IEnumerable<FornecedoresEmpresa.Models.Fornecedor>
+
+@{
+    ViewData["Title"] = "Fornecedores";
+}
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#modalExcluir').on('shown.bs.modal', function (event) {
+                let idFornecedor = event.relatedTarget.dataset.id;
+                let href = "@Url.Action("Excluir","Fornecedor")/" + idFornecedor;
+                $(this).find("#btnExcluir").attr("href", href);
+            });
+        });
+    </script>
+}
+
+<h1>Fornecedores</h1>
+
+<a href="@Url.ActionLink("Cadastrar")"> Cadastrar Fornecedor </a>
+
+<table class="table" border="1">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>CNPJ/CPF</th>
+            <th>RG</th>
+            <th>Data de Nascimento</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var fornecedor in Model)
+        {
+            <tr>
+                <td>@fornecedor.Nome</td>
+                <td>@(fornecedor.Cnpj == null ? fornecedor.Cpf : fornecedor.Cnpj)</td>
+                <td>@fornecedor.Rg</td>
+                <td>@(fornecedor.DataNascimento.HasValue ? fornecedor.DataNascimento.Value.ToShortDateString() : "")</td>
+                <td>
+                    @Html.ActionLink("Alterar", "Alterar", new { id = fornecedor.Id }) |
+                    <button type="button" data-toggle="modal" data-target="#modalExcluir" data-id="@fornecedor.Id" class="btn btn-sm btn-danger">Excluir</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="modal" id="modalExcluir" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Excluir Fornecedor</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Quer realmente excluir esse Fornecedor?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                <a href="#" id="btnExcluir" class="btn btn-danger">Excluir</a>
+            </div>
+        </div>
+    </div>
+</div>

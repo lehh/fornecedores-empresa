@@ -150,6 +150,7 @@ namespace FornecedoresEmpresa.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
         public async Task<IActionResult> Excluir(int? id)
         {
             if (id == null)
