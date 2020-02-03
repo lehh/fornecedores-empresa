@@ -17,11 +17,18 @@ namespace FornecedoresEmpresa.Regras
             this.fornecedorDados = new FornecedorDados(sessao);
         }
 
+        public async Task<ICollection<Fornecedor>> Filtrar(Fornecedor filtro)
+        {
+            return await fornecedorDados.BuscarTodos(filtro);
+        }
+
         public async Task<bool> CadastrarAsync(Fornecedor fornecedor)
         {
             FornecedorValido(fornecedor);
 
-            fornecedor = await AdicionaTelefoneFornecedorAsync(fornecedor);
+            fornecedor = AdicionaTelefoneFornecedor(fornecedor);
+
+            fornecedor.DataCadastro = DateTime.Today;
 
             await fornecedorDados.Inserir(fornecedor);
 
@@ -32,7 +39,7 @@ namespace FornecedoresEmpresa.Regras
         {
             FornecedorValido(fornecedor);
 
-            fornecedor = await AdicionaTelefoneFornecedorAsync(fornecedor);
+            fornecedor = AdicionaTelefoneFornecedor(fornecedor);
 
             fornecedor.DataModificacao = DateTime.Now;
 
@@ -41,11 +48,6 @@ namespace FornecedoresEmpresa.Regras
             return true;
         }
 
-        /// <summary>
-        /// Metodo que cria objetos de fornecedor para associação com empresa.
-        /// </summary>
-        /// <param name="listaIdFornecedor"></param>
-        /// <returns></returns>
         public async Task<List<Fornecedor>> BuscaListaFornecedorAsync(List<int> listaIdFornecedor, Empresa empresa)
         {
             var listaFornecedor = new List<Fornecedor>();
@@ -77,6 +79,22 @@ namespace FornecedoresEmpresa.Regras
             return true;
         }
 
+        public async Task<bool> RemoverAssociacaoComEmpresa(int id)
+        {
+            var fornecedor = await fornecedorDados.BuscarPorId(id);
+
+            if (fornecedor == null)
+            {
+                throw new UsuarioException("Fornecedor não encontrado");
+            }
+
+            fornecedor.Empresa = null;
+
+            await fornecedorDados.Alterar(fornecedor);
+
+            return true;
+        }
+
         private void FornecedorValido(Fornecedor fornecedor)
         {
             if (fornecedor.Cnpj == null && fornecedor.Cpf == null)
@@ -100,7 +118,7 @@ namespace FornecedoresEmpresa.Regras
             }
         }
 
-        private async Task<Fornecedor> AdicionaTelefoneFornecedorAsync(Fornecedor fornecedor)
+        private Fornecedor AdicionaTelefoneFornecedor(Fornecedor fornecedor)
         {
             foreach (var telefone in fornecedor.Telefones)
             {

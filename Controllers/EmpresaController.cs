@@ -59,11 +59,11 @@ namespace FornecedoresEmpresa.Controllers
         [HttpGet]
         public async Task<IActionResult> Cadastrar()
         {
-            var collectionFornecedor = await new FornecedorDados(Sessao).ListarTodos();
+            var collectionFornecedor = await new FornecedorDados(Sessao).BuscaFornecedoresDisponiveis();
 
             var model = new EmpresaViewModelCadastro()
             {
-                ListaFornecedor = (List<Fornecedor>)collectionFornecedor
+                ListaFornecedor = collectionFornecedor
             };
 
             return View(model);
@@ -79,6 +79,8 @@ namespace FornecedoresEmpresa.Controllers
 
             try
             {
+                model.ListaFornecedor = await new FornecedorDados(Sessao).BuscaFornecedoresDisponiveis();
+
                 var empresa = new Empresa()
                 {
                     NomeFantasia = model.NomeFantasia,
@@ -93,14 +95,19 @@ namespace FornecedoresEmpresa.Controllers
                 empresa.Fornecedores = new HashSet<Fornecedor>(listaFornecedor);
                 
                 await new EmpresaRegras(Sessao).CadastrarAsync(empresa);
+
+                return RedirectToAction("Index");
+            }
+            catch (UsuarioException uex)
+            {
+                TempData["Mensagem"] = uex.Message;
             }
             catch (Exception ex)
             {
-                TempData["Mensagem"] = "Erro " + ex.Message;
-                return View(model);
+                TempData["Mensagem"] = "Erro " + ex.Message; 
             }
 
-            return RedirectToAction("Index");
+            return View(model);
         }
 
         [HttpGet]

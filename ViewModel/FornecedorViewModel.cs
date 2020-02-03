@@ -53,4 +53,16 @@ namespace FornecedoresEmpresa.ViewModel
     {
         public int Id { get; set; }
     }
+
+    public class FornecedorViewModelIndex
+    {
+        public FornecedorViewModelIndex()
+        {
+            ListaFornecedor = new List<Fornecedor>();
+        }
+
+        public ICollection<Fornecedor> ListaFornecedor { get; set; }
+
+        public Fornecedor Fornecedor { get; set; }
+    }
 }

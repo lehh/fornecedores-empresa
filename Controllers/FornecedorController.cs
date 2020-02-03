@@ -26,7 +26,21 @@ namespace FornecedoresEmpresa.Controllers
         {
             var listaFornecedor = await new FornecedorDados(Sessao).ListarTodos();
 
-            return View(listaFornecedor);
+            var model = new FornecedorViewModelIndex();
+
+            model.ListaFornecedor = listaFornecedor;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Filtrar(FornecedorViewModelIndex model)
+        {
+            var listaFornecedor = await new FornecedorDados(Sessao).BuscarTodos(model.Fornecedor);
+
+            model.ListaFornecedor = listaFornecedor;
+
+            return View("Index", model);
         }
 
         [HttpGet]
@@ -182,7 +196,7 @@ namespace FornecedoresEmpresa.Controllers
 
             try
             {
-                fornecedorDados.Excluir(fornecedor);
+                await fornecedorDados.Excluir(fornecedor);
             }
             catch (Exception ex)
             {
@@ -190,6 +204,31 @@ namespace FornecedoresEmpresa.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> RemoverAssociacao(int? id)
+        {
+            if (!id.HasValue)
+            {
+                return RedirectToAction("Index", "Empresa");
+            }
+
+            try
+            {
+                await new FornecedorRegras(Sessao).RemoverAssociacaoComEmpresa((int)id);
+            }
+            catch (UsuarioException uex)
+            {
+                TempData["Mensagem"] = uex.Message;
+            }
+            catch (Exception ex)
+            {
+                TempData["Mensagem"] = "Erro " + ex.Message;
+            }
+
+            var url = HttpContext.Request.Headers["Referer"];
+
+            return Redirect(url);
         }
 
         public ViewResult AdicionarTelefone(int indice, string nomeLista, string divId)

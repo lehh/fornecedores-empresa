@@ -36,7 +36,7 @@
                     <td>@fornecedor.Rg</td>
                     <td>@(fornecedor.DataNascimento.HasValue ? fornecedor.DataNascimento.Value.ToShortDateString() : "")</td>
                     <td>
-                        @Html.ActionLink("Remover", "RemoverAssociacao", new { id = fornecedor.Id })
+                        @Html.ActionLink("Remover", "RemoverAssociacao", "Fornecedor", new { id = fornecedor.Id })
                     </td>
                 </tr>
             }

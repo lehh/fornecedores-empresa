@@ -22,6 +22,8 @@ namespace FornecedoresEmpresa.Regras
         {
             ValidaFornecedores(empresa.Fornecedores, empresa);
 
+            empresa.DataCadastro = DateTime.Today;
+
             await empresaDados.Inserir(empresa);
 
             return true;
@@ -70,7 +72,7 @@ namespace FornecedoresEmpresa.Regras
 
             if (ufEmpresa == "PR" && idadeFornecedor < 18)
             {
-                throw new UsuarioException("Não é possível cadastrar um fornecedor menor de idade para o Paraná");
+                throw new UsuarioException("Não é possível cadastrar o fornecedor " + fornecedor.Nome + " para o Paraná pois ele é menor de idade");
             }
         }
     }
