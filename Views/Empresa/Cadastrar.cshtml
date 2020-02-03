@@ -6,8 +6,6 @@
 
 <h1>Cadastrar Empresa</h1>
 
-@TempData["Mensagem"]
-
 @using (Html.BeginForm("Cadastrar", "Empresa", FormMethod.Post))
 {
     @Html.LabelFor(m => m.NomeFantasia)
@@ -27,6 +25,15 @@
     @Html.EditorFor(m => m.Cnpj)
 
     @Html.ValidationMessageFor(m => m.Cnpj)
+
+    @Html.LabelFor(m => m.ListaIdFornecedor)
+
+    <select multiple name="@nameof(Model.ListaIdFornecedor)">
+        @foreach (var fornecedor in Model.ListaFornecedor)
+        {
+            <option value="@fornecedor.Id">@fornecedor.Nome</option>
+        }
+    </select>
 
     <button type="submit">Cadastrar</button>
 }

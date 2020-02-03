@@ -39,7 +39,7 @@ namespace FornecedoresEmpresa.Controllers
         }
 
         [HttpPost]
-        public IActionResult Cadastrar(FornecedorViewModelCadastro model)
+        public async Task<IActionResult> Cadastrar(FornecedorViewModelCadastro model)
         {
             if (!ModelState.IsValid)
             {
@@ -61,8 +61,7 @@ namespace FornecedoresEmpresa.Controllers
 
             try
             {
-                var fornecedorDados = new FornecedorDados(Sessao);
-                new FornecedorRegras(fornecedorDados).CadastrarAsync(fornecedor);
+                await new FornecedorRegras(Sessao).CadastrarAsync(fornecedor);
 
                 return RedirectToAction("Index");
             }
@@ -129,8 +128,7 @@ namespace FornecedoresEmpresa.Controllers
 
             try
             {
-                var fornecedorDados = new FornecedorDados(Sessao);
-                var fornecedor = await fornecedorDados.BuscarPorId(model.Id);
+                var fornecedor = await new FornecedorDados(Sessao).BuscarPorId(model.Id);
 
                 if (fornecedor == null)
                 {
@@ -150,7 +148,7 @@ namespace FornecedoresEmpresa.Controllers
                 fornecedor.DataNascimento = model.DataNascimento;
                 fornecedor.Telefones = setTelefoneFornecedor;
 
-                await new FornecedorRegras(fornecedorDados).AlterarAsync(fornecedor);
+                await new FornecedorRegras(Sessao).AlterarAsync(fornecedor);
 
                 return RedirectToAction("Index");
             }

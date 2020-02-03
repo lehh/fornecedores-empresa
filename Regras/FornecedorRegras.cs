@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FornecedoresEmpresa.Data.Persistencia;
 using FornecedoresEmpresa.Models;
 using FornecedoresEmpresa.Utils;
+using NHibernate;
 
 namespace FornecedoresEmpresa.Regras
 {
@@ -10,9 +12,9 @@ namespace FornecedoresEmpresa.Regras
     {
         private readonly FornecedorDados fornecedorDados;
 
-        public FornecedorRegras(FornecedorDados fornecedorDados)
+        public FornecedorRegras(ISession sessao)
         {
-            this.fornecedorDados = fornecedorDados;
+            this.fornecedorDados = new FornecedorDados(sessao);
         }
 
         public async Task<bool> CadastrarAsync(Fornecedor fornecedor)
@@ -21,7 +23,7 @@ namespace FornecedoresEmpresa.Regras
 
             fornecedor = await AdicionaTelefoneFornecedorAsync(fornecedor);
 
-            fornecedorDados.Inserir(fornecedor);
+            await fornecedorDados.Inserir(fornecedor);
 
             return true;
         }
@@ -32,7 +34,45 @@ namespace FornecedoresEmpresa.Regras
 
             fornecedor = await AdicionaTelefoneFornecedorAsync(fornecedor);
 
+            fornecedor.DataModificacao = DateTime.Now;
+
             await fornecedorDados.Alterar(fornecedor);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Metodo que cria objetos de fornecedor para associação com empresa.
+        /// </summary>
+        /// <param name="listaIdFornecedor"></param>
+        /// <returns></returns>
+        public async Task<List<Fornecedor>> BuscaListaFornecedorAsync(List<int> listaIdFornecedor, Empresa empresa)
+        {
+            var listaFornecedor = new List<Fornecedor>();
+
+            foreach (var fornecedorId in listaIdFornecedor)
+            {
+                var fornecedor = await fornecedorDados.BuscarPorId(fornecedorId);
+
+                if (fornecedor == null)
+                {
+                    continue;
+                }
+
+                fornecedor.Empresa = empresa;
+
+                listaFornecedor.Add(fornecedor);
+            }
+
+            return listaFornecedor;
+        }
+
+        public async Task<bool> AlterarVariosAsync(List<Fornecedor> listaFornecedor)
+        {
+            foreach (var fornecedor in listaFornecedor)
+            {
+                await fornecedorDados.Alterar(fornecedor);
+            }
 
             return true;
         }

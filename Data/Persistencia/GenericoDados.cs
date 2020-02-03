@@ -43,34 +43,38 @@ namespace FornecedoresEmpresa.Data.Persistencia
             return await Sessao.GetAsync<T>(id);
         }
 
-        public async void Excluir(T objeto)
+        public async Task<bool> Excluir(T objeto)
         {
             ITransaction transacao = Sessao.BeginTransaction();
 
             try
             {
                 await Sessao.DeleteAsync(objeto);
-                transacao.Commit();
+                await transacao.CommitAsync();
+
+                return true;
             }
             catch
             {
-                transacao.Rollback();
+                await transacao.RollbackAsync();
                 throw;
             }
         }
 
-        public async void Inserir(T objeto)
+        public async Task<bool> Inserir(T objeto)
         {
             ITransaction transacao = Sessao.BeginTransaction();
 
             try
             {
                 await Sessao.SaveAsync(objeto);
-                transacao.Commit();
+                await transacao.CommitAsync();
+
+                return true;
             }
             catch
             {
-                transacao.Rollback();
+                await transacao.RollbackAsync();
                 throw;
             }
            

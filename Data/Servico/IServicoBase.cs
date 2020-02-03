@@ -9,9 +9,9 @@ namespace FornecedoresEmpresa.Data.Servico
         where T : class
         where K : struct
     {
-        void Inserir(T objeto);
+        Task<bool> Inserir(T objeto);
 
-        void Excluir(T objeto);
+        Task<bool> Excluir(T objeto);
 
         Task<bool> Alterar(T objeto);
 

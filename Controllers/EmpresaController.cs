@@ -7,6 +7,8 @@ using NHibernate;
 using FornecedoresEmpresa.Data.Persistencia;
 using FornecedoresEmpresa.ViewModel;
 using FornecedoresEmpresa.Models;
+using FornecedoresEmpresa.Regras;
+using FornecedoresEmpresa.Utils;
 
 namespace FornecedoresEmpresa.Controllers
 {
@@ -55,30 +57,42 @@ namespace FornecedoresEmpresa.Controllers
         }
 
         [HttpGet]
-        public IActionResult Cadastrar()
+        public async Task<IActionResult> Cadastrar()
         {
-            return View(new EmpresaViewModelCadastro());
+            var collectionFornecedor = await new FornecedorDados(Sessao).ListarTodos();
+
+            var model = new EmpresaViewModelCadastro()
+            {
+                ListaFornecedor = (List<Fornecedor>)collectionFornecedor
+            };
+
+            return View(model);
         }
 
         [HttpPost]
-        public IActionResult Cadastrar(EmpresaViewModelCadastro model)
+        public async Task<IActionResult> Cadastrar(EmpresaViewModelCadastro model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            var empresa = new Empresa()
-            {
-                NomeFantasia = model.NomeFantasia,
-                Cnpj = model.Cnpj,
-                Uf = model.Uf,
-                DataCadastro = DateTime.Now
-            };
-
             try
             {
-                new EmpresaDados(Sessao).Inserir(empresa);
+                var empresa = new Empresa()
+                {
+                    NomeFantasia = model.NomeFantasia,
+                    Cnpj = model.Cnpj,
+                    Uf = model.Uf,
+                    DataCadastro = DateTime.Now
+                };
+
+                var fornecedorRegras = new FornecedorRegras(Sessao);
+                var listaFornecedor = await fornecedorRegras.BuscaListaFornecedorAsync(model.ListaIdFornecedor, empresa);
+                
+                empresa.Fornecedores = new HashSet<Fornecedor>(listaFornecedor);
+                
+                await new EmpresaRegras(Sessao).CadastrarAsync(empresa);
             }
             catch (Exception ex)
             {
@@ -138,7 +152,7 @@ namespace FornecedoresEmpresa.Controllers
 
             try
             {
-                empresaDados.Alterar(empresa);
+                await empresaDados.Alterar(empresa);
             }
             catch (Exception ex)
             {
@@ -149,7 +163,7 @@ namespace FornecedoresEmpresa.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Excluir(int? id)
         {
             if (id == null)
@@ -157,17 +171,14 @@ namespace FornecedoresEmpresa.Controllers
                 return RedirectToAction("Index");
             }
 
-            var empresaDados = new EmpresaDados(Sessao);
-            var empresa = await empresaDados.BuscarPorId((int)id);
-
-            if (empresa == null) 
-            {
-                return RedirectToAction("Index");
-            }
-
             try
             {
-                empresaDados.Excluir(empresa);
+                var empresaRegras = new EmpresaRegras(Sessao);
+                await empresaRegras.ExcluirAsync((int)id);
+            }
+            catch (UsuarioException uex)
+            {
+                TempData["Mensagem"] = uex.Message;
             }
             catch (Exception ex)
             {

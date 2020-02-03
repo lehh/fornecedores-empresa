@@ -4,11 +4,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using FornecedoresEmpresa.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FornecedoresEmpresa.ViewModel
 {
     public abstract class EmpresaViewModel
     {
+        public EmpresaViewModel()
+        {
+            ListaFornecedor = new List<Fornecedor>();
+            ListaIdFornecedor = new List<int>();
+        }
+
         [Required(ErrorMessage = "Preencha o campo Uf")]
         [Display(Name = "UF")]
         public string Uf { get; set; }
@@ -21,6 +28,10 @@ namespace FornecedoresEmpresa.ViewModel
         [Display(Name = "CNPJ")]
         [StringLength(14)]
         public string Cnpj { get; set; }
+
+        public List<int> ListaIdFornecedor { get; set; }
+
+        public List<Fornecedor> ListaFornecedor { get; set; }
     }
 
     public class EmpresaViewModelCadastro : EmpresaViewModel
@@ -30,14 +41,7 @@ namespace FornecedoresEmpresa.ViewModel
 
     public class EmpresaViewModelDetalhes : EmpresaViewModel
     {
-        public EmpresaViewModelDetalhes()
-        {
-            ListaFornecedor = new List<Fornecedor>();
-        }
-
         public DateTime DataCadastro { get; set; }
-
-        public List<Fornecedor> ListaFornecedor { get; set; }
     }
 
     public class EmpresaViewModelAlterar : EmpresaViewModel
