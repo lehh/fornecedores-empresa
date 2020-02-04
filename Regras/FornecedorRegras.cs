@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FornecedoresEmpresa.Data.Persistencia;
 using FornecedoresEmpresa.Models;
@@ -48,6 +49,9 @@ namespace FornecedoresEmpresa.Regras
             return true;
         }
 
+        /// <summary>
+        /// Busca uma lista de fornecedores a partir de uma lista de ids e vincula a empresa. 
+        /// </summary>
         public async Task<List<Fornecedor>> BuscaListaFornecedorAsync(List<int> listaIdFornecedor, Empresa empresa)
         {
             var listaFornecedor = new List<Fornecedor>();
@@ -79,7 +83,7 @@ namespace FornecedoresEmpresa.Regras
             return true;
         }
 
-        public async Task<bool> RemoverAssociacaoComEmpresa(int id)
+        public async Task<bool> RemoverAssociacaoComEmpresaAsync(int id)
         {
             var fornecedor = await fornecedorDados.BuscarPorId(id);
 
@@ -93,6 +97,23 @@ namespace FornecedoresEmpresa.Regras
             await fornecedorDados.Alterar(fornecedor);
 
             return true;
+        }
+
+        public async Task<bool> RemoverAssociadosComEmpresa(
+           ISet<Fornecedor> listaFornecedorAtual,
+           ISet<Fornecedor> listaFornecedorAtualizado
+        )
+        {
+            var listaFornecedorParaRemover = listaFornecedorAtual
+                        .Where(fornecedor => !listaFornecedorAtualizado.Select(f => f.Id).Contains(fornecedor.Id))
+                        .ToList();
+
+            foreach (var fornecedor in listaFornecedorParaRemover)
+            {
+                fornecedor.Empresa = null;
+            }
+
+            return await AlterarVariosAsync(listaFornecedorParaRemover);
         }
 
         private void FornecedorValido(Fornecedor fornecedor)

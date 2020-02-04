@@ -9,6 +9,7 @@ using FornecedoresEmpresa.ViewModel;
 using FornecedoresEmpresa.Models;
 using FornecedoresEmpresa.Regras;
 using FornecedoresEmpresa.Utils;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FornecedoresEmpresa.Controllers
 {
@@ -61,10 +62,16 @@ namespace FornecedoresEmpresa.Controllers
         {
             var collectionFornecedor = await new FornecedorDados(Sessao).BuscaFornecedoresDisponiveis();
 
-            var model = new EmpresaViewModelCadastro()
+            var model = new EmpresaViewModelCadastro();
+
+            foreach (var fornecedor in collectionFornecedor)
             {
-                ListaFornecedor = collectionFornecedor
-            };
+                model.SelectListaFornecedor.Add(new SelectListItem()
+                {
+                    Value = fornecedor.Id.ToString(),
+                    Text = fornecedor.Nome
+                });
+            }
 
             return View(model);
         }
@@ -91,9 +98,9 @@ namespace FornecedoresEmpresa.Controllers
 
                 var fornecedorRegras = new FornecedorRegras(Sessao);
                 var listaFornecedor = await fornecedorRegras.BuscaListaFornecedorAsync(model.ListaIdFornecedor, empresa);
-                
+
                 empresa.Fornecedores = new HashSet<Fornecedor>(listaFornecedor);
-                
+
                 await new EmpresaRegras(Sessao).CadastrarAsync(empresa);
 
                 return RedirectToAction("Index");
@@ -104,7 +111,7 @@ namespace FornecedoresEmpresa.Controllers
             }
             catch (Exception ex)
             {
-                TempData["Mensagem"] = "Erro " + ex.Message; 
+                TempData["Mensagem"] = "Erro " + ex.Message;
             }
 
             return View(model);
@@ -125,12 +132,23 @@ namespace FornecedoresEmpresa.Controllers
                 return RedirectToAction("Index");
             }
 
-            var model = new EmpresaViewModelAlterar()
+            var model = new EmpresaViewModelAlterar();
+
+            var listaFornecedores = await new FornecedorDados(Sessao).BuscaFornecedoresDisponiveis();
+
+            foreach (var fornecedor in listaFornecedores)
             {
-                Cnpj = empresa.Cnpj,
-                NomeFantasia = empresa.NomeFantasia,
-                Uf = empresa.Uf
-            };
+                model.SelectListaFornecedor.Add(new SelectListItem(fornecedor.Nome, fornecedor.Id.ToString()));
+            }
+
+            foreach (var fornecedor in empresa.Fornecedores)
+            {
+                model.SelectListaFornecedor.Add(new SelectListItem(fornecedor.Nome, fornecedor.Id.ToString(), true));
+            }
+
+            model.Cnpj = empresa.Cnpj;
+            model.NomeFantasia = empresa.NomeFantasia;
+            model.Uf = empresa.Uf;
 
             return View(model);
         }
@@ -156,6 +174,15 @@ namespace FornecedoresEmpresa.Controllers
             empresa.Cnpj = model.Cnpj;
             empresa.Uf = model.Uf;
             empresa.DataModificacao = DateTime.Now;
+
+            var fornecedorRegras = new FornecedorRegras(Sessao);
+            var listaFornecedor = await fornecedorRegras.BuscaListaFornecedorAsync(model.ListaIdFornecedor, empresa);
+
+            var setFornecedor = new HashSet<Fornecedor>(listaFornecedor);
+
+            await fornecedorRegras.RemoverAssociadosComEmpresa(empresa.Fornecedores, setFornecedor);
+
+            empresa.Fornecedores = setFornecedor;
 
             try
             {

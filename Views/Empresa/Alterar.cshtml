@@ -28,6 +28,15 @@
 
     @Html.ValidationMessageFor(m => m.Cnpj)
 
+    @Html.LabelFor(m => m.ListaIdFornecedor)
+
+    <select multiple name="@nameof(Model.ListaIdFornecedor)">
+        @foreach (var fornecedor in Model.SelectListaFornecedor)
+        {
+            <option value="@fornecedor.Value" selected="@fornecedor.Selected">@fornecedor.Text</option>
+        }
+    </select>
+
     <button type="submit">Alterar</button>
 }
 

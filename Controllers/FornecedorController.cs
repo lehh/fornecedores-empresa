@@ -215,7 +215,7 @@ namespace FornecedoresEmpresa.Controllers
 
             try
             {
-                await new FornecedorRegras(Sessao).RemoverAssociacaoComEmpresa((int)id);
+                await new FornecedorRegras(Sessao).RemoverAssociacaoComEmpresaAsync((int)id);
             }
             catch (UsuarioException uex)
             {

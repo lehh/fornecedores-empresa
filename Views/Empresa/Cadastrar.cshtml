@@ -28,12 +28,14 @@
 
     @Html.LabelFor(m => m.ListaIdFornecedor)
 
-    <select multiple name="@nameof(Model.ListaIdFornecedor)">
-        @foreach (var fornecedor in Model.ListaFornecedor)
-        {
-            <option value="@fornecedor.Id">@fornecedor.Nome</option>
-        }
-    </select>
+    @Html.ListBoxFor(m => m.ListaIdFornecedor, Model.SelectListaFornecedor)
+
+    @*<select multiple name="@nameof(Model.ListaIdFornecedor)">
+            @foreach (var fornecedor in Model.ListaFornecedor)
+            {
+                <option value="@fornecedor.Id">@fornecedor.Nome</option>
+            }
+        </select>*@
 
     <button type="submit">Cadastrar</button>
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using FornecedoresEmpresa.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using FornecedoresEmpresa.Data.Persistencia;
 
 namespace FornecedoresEmpresa.ViewModel
 {
@@ -14,6 +15,7 @@ namespace FornecedoresEmpresa.ViewModel
         {
             ListaFornecedor = new List<Fornecedor>();
             ListaIdFornecedor = new List<int>();
+            SelectListaFornecedor = new List<SelectListItem>();
         }
 
         [Required(ErrorMessage = "Preencha o campo Uf")]
@@ -32,6 +34,8 @@ namespace FornecedoresEmpresa.ViewModel
         public List<int> ListaIdFornecedor { get; set; }
 
         public List<Fornecedor> ListaFornecedor { get; set; }
+
+        public List<SelectListItem> SelectListaFornecedor { get; set; }
     }
 
     public class EmpresaViewModelCadastro : EmpresaViewModel
