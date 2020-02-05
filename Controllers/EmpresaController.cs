@@ -101,6 +101,8 @@ namespace FornecedoresEmpresa.Controllers
 
                 await new EmpresaRegras(Sessao).CadastrarAsync(empresa);
 
+                TempData["Mensagem"] = "Empresa cadastrada com sucesso!";
+
                 return RedirectToAction("Index");
             }
             catch (UsuarioException uex)
@@ -185,6 +187,8 @@ namespace FornecedoresEmpresa.Controllers
             try
             {
                 await empresaDados.Alterar(empresa);
+
+                TempData["Mensagem"] = "Empresa salva com sucesso!";
             }
             catch (Exception ex)
             {
@@ -207,6 +211,8 @@ namespace FornecedoresEmpresa.Controllers
             {
                 var empresaRegras = new EmpresaRegras(Sessao);
                 await empresaRegras.ExcluirAsync((int)id);
+
+                TempData["Mensagem"] = "Empresa excluída com sucesso!";
             }
             catch (UsuarioException uex)
             {

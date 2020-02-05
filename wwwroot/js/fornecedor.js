@@ -1,6 +1,12 @@
 ﻿$(document).ready(function () {
+    showHideInputs($("#selectTipoPessoa").children("option:selected").val());
     adicionaEventoBtnRemover();
     $("#remover-telefone0").remove();
+
+    $("#selectTipoPessoa").on("change", function () {
+        $("#selectTipoPessoa option[value='']").remove();
+        showHideInputs(this.value);
+    });
 });
 
 $(document).ajaxComplete(function () {
@@ -33,4 +39,25 @@ function ajaxAdicionaTelefone(url, nomeLista, indice, divId) {
         success: function (html) { $("#telefonesDiv").append(html); },
         error: function (error) { console.log(error) }
     });
+}
+
+function showHideInputs(valorSelect) {
+    let pessoaFisica = $(".pessoa-fisica");
+    let pessoaJuridica = $(".pessoa-juridica");
+
+    if (!valorSelect)
+        return;
+
+    $("#itensFormulario").removeClass("d-none");
+
+    if (valorSelect == "PF") {
+        pessoaFisica.show();
+        pessoaJuridica.hide();
+        return;
+    }
+    if (valorSelect == "PJ") {
+        pessoaJuridica.show();
+        pessoaFisica.hide();
+        return;
+    }
 }

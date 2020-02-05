@@ -10,7 +10,7 @@
     @Html.Hidden((string)nameId, Model.Id)
     @Html.LabelFor(m => m.Numero, new { @class = "sr-only" })
 
-    @Html.EditorFor(m => m.Numero, "name", (string)nameNumero, new { htmlAttributes = new { @class = "form-control telefones", placeholder = "Número de Telefone" } })
+    @Html.EditorFor(m => m.Numero, "name", (string)nameNumero, new { htmlAttributes = new { @class = "form-control telefones", placeholder = "Número de Telefone", type = "number" } })
 
     @Html.ValidationMessageFor(m => m.Numero, null, new { @data_valmsg_for = (string)nameNumero })
 

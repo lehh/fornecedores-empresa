@@ -30,17 +30,15 @@
         }
 
         .close {
-            float: right;
             font-size: 1.8rem;
             font-weight: 900;
             line-height: 1;
-            color: #f00;
-            text-shadow: 0 3px 2px #000000;
-            opacity: .5;
+            color: #000;
+            text-shadow: 0 3px 2px #bdbdbd;
         }
 
             .close:hover {
-                color: #bfbfbf;
+                color: #000;
             }
     </style>
 
@@ -62,7 +60,7 @@
     <div class="container shadow-lg" style="background:#212529; padding:1%;">
         @if (TempData["Mensagem"] != null)
         {
-            <div class="alert alert-primary" role="alert">
+            <div class="alert alert-light" role="alert">
                 @TempData["Mensagem"]
 
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">

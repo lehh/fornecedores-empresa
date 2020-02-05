@@ -77,6 +77,8 @@ namespace FornecedoresEmpresa.Controllers
             {
                 await new FornecedorRegras(Sessao).CadastrarAsync(fornecedor);
 
+                TempData["Mensagem"] = "Fornecedor cadastrado com sucesso!";
+
                 return RedirectToAction("Index");
             }
             catch (UsuarioException uex)
@@ -165,6 +167,8 @@ namespace FornecedoresEmpresa.Controllers
 
                 await new FornecedorRegras(Sessao).AlterarAsync(fornecedor);
 
+                TempData["Mensagem"] = "Fornecedor salvo com sucesso!";
+
                 return RedirectToAction("Index");
             }
             catch (UsuarioException uex)
@@ -198,6 +202,8 @@ namespace FornecedoresEmpresa.Controllers
             try
             {
                 await fornecedorDados.Excluir(fornecedor);
+
+                TempData["Mensagem"] = "Fornecedor excluído com sucesso!";
             }
             catch (Exception ex)
             {
@@ -217,6 +223,8 @@ namespace FornecedoresEmpresa.Controllers
             try
             {
                 await new FornecedorRegras(Sessao).RemoverAssociacaoComEmpresaAsync((int)id);
+
+                TempData["Mensagem"] = "Fornecedor desassociado com sucesso!";
             }
             catch (UsuarioException uex)
             {

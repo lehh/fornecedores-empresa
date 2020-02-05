@@ -47,7 +47,7 @@
         @Html.LabelFor(m => m.Cnpj, new { @class = "col-form-label col-lg-2" })
 
         <div class="col-sm-4 col-3">
-            @Html.EditorFor(m => m.Cnpj, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(m => m.Cnpj, new { htmlAttributes = new { @class = "form-control", type = "number" } })
 
             @Html.ValidationMessageFor(m => m.Cnpj)
         </div>

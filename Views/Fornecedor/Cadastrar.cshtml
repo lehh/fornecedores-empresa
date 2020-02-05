@@ -13,7 +13,6 @@
     <script async src="~/js/fornecedor.js"></script>
     <script>
         $(document).ready(function () {
-            showHideInputs($("#selectTipoPessoa").children("option:selected").val());
 
             $("#adicionarTelefone").on("click", function (event) {
                 event.preventDefault();
@@ -24,33 +23,7 @@
                 ajaxAdicionaTelefone(this.href, nomeLista, indice, divId);
             });
 
-            $("#selectTipoPessoa").on("change", function () {
-                $("#selectTipoPessoa option[value='']").remove();
-                showHideInputs(this.value);
-            });
-
         });
-
-        function showHideInputs(valorSelect) {
-            let pessoaFisica = $(".pessoa-fisica");
-            let pessoaJuridica = $(".pessoa-juridica");
-
-            if (!valorSelect)
-                return;
-
-            $("#itensFormulario").removeClass("d-none");
-
-            if (valorSelect == "PF") {
-                pessoaFisica.show();
-                pessoaJuridica.hide();
-                return;
-            }
-            if (valorSelect == "PJ") {
-                pessoaJuridica.show();
-                pessoaFisica.hide();
-                return;
-            }
-        }
     </script>
 }
 
@@ -84,7 +57,7 @@
             @Html.LabelFor(m => m.Cpf, new { @class = "col-form-label col-lg-2" })
 
             <div class="col-sm-4 col-3">
-                @Html.EditorFor(m => m.Cpf, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(m => m.Cpf, new { htmlAttributes = new { @class = "form-control", type = "number" } })
 
                 @Html.ValidationMessageFor(m => m.Cpf)
             </div>
@@ -94,7 +67,7 @@
             @Html.LabelFor(m => m.Rg, new { @class = "col-form-label col-lg-2" })
 
             <div class="col-sm-4 col-3">
-                @Html.EditorFor(m => m.Rg, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(m => m.Rg, new { htmlAttributes = new { @class = "form-control", type = "number" } })
 
                 @Html.ValidationMessageFor(m => m.Rg)
             </div>
@@ -104,7 +77,7 @@
             @Html.LabelFor(m => m.Cnpj, new { @class = "col-form-label col-lg-2" })
 
             <div class="col-sm-4 col-3">
-                @Html.EditorFor(m => m.Cnpj, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(m => m.Cnpj, new { htmlAttributes = new { @class = "form-control", type = "number" } })
 
                 @Html.ValidationMessageFor(m => m.Cnpj)
             </div>
