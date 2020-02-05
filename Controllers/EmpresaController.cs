@@ -94,6 +94,13 @@ namespace FornecedoresEmpresa.Controllers
                     DataCadastro = DateTime.Now
                 };
 
+                var listaFornecedores = await new FornecedorDados(Sessao).BuscaFornecedoresDisponiveis();
+
+                foreach (var fornecedor in listaFornecedores)
+                {
+                    model.SelectListaFornecedor.Add(new SelectListItem(fornecedor.Nome, fornecedor.Id.ToString()));
+                }
+
                 var fornecedorRegras = new FornecedorRegras(Sessao);
                 var listaFornecedor = await fornecedorRegras.BuscaListaFornecedorAsync(model.ListaIdFornecedor, empresa);
 
@@ -170,6 +177,18 @@ namespace FornecedoresEmpresa.Controllers
                 return RedirectToAction("Index");
             }
 
+            var listaFornecedores = await new FornecedorDados(Sessao).BuscaFornecedoresDisponiveis();
+
+            foreach (var fornecedor in listaFornecedores)
+            {
+                model.SelectListaFornecedor.Add(new SelectListItem(fornecedor.Nome, fornecedor.Id.ToString()));
+            }
+
+            foreach (var fornecedor in empresa.Fornecedores)
+            {
+                model.SelectListaFornecedor.Add(new SelectListItem(fornecedor.Nome, fornecedor.Id.ToString(), true));
+            }
+
             empresa.NomeFantasia = model.NomeFantasia;
             empresa.Cnpj = model.Cnpj;
             empresa.Uf = model.Uf;
@@ -186,17 +205,22 @@ namespace FornecedoresEmpresa.Controllers
 
             try
             {
-                await empresaDados.Alterar(empresa);
+                await new EmpresaRegras(Sessao).AlterarAsync(empresa);
 
                 TempData["Mensagem"] = "Empresa salva com sucesso!";
+
+                return RedirectToAction("Index");
+            }
+            catch (UsuarioException uex)
+            {
+                TempData["Mensagem"] = uex.Message;
             }
             catch (Exception ex)
             {
                 TempData["Mensagem"] = "Erro " + ex.Message;
-                return View(model);
             }
 
-            return RedirectToAction("Index");
+            return View(model);
         }
 
         [HttpGet]

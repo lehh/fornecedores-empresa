@@ -29,6 +29,17 @@ namespace FornecedoresEmpresa.Regras
             return true;
         }
 
+        public async Task<bool> AlterarAsync(Empresa empresa)
+        {
+            ValidaFornecedores(empresa.Fornecedores, empresa);
+
+            empresa.DataModificacao = DateTime.Today;
+
+            await empresaDados.Alterar(empresa);
+
+            return true;
+        }
+
         public async Task<bool> ExcluirAsync(int id)
         {
             var empresa = await empresaDados.BuscarPorId((int)id);
@@ -72,7 +83,7 @@ namespace FornecedoresEmpresa.Regras
 
             if (ufEmpresa == "PR" && idadeFornecedor < 18)
             {
-                throw new UsuarioException("Não é possível cadastrar o fornecedor " + fornecedor.Nome + " para o Paraná pois ele é menor de idade");
+                throw new UsuarioException("Não é possível associar o fornecedor " + fornecedor.Nome + " para o Paraná pois ele é menor de idade");
             }
         }
     }
