@@ -86,8 +86,6 @@ namespace FornecedoresEmpresa.Controllers
 
             try
             {
-                model.ListaFornecedor = await new FornecedorDados(Sessao).BuscaFornecedoresDisponiveis();
-
                 var empresa = new Empresa()
                 {
                     NomeFantasia = model.NomeFantasia,

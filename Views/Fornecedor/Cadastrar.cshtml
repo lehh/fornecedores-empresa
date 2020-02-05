@@ -28,8 +28,6 @@
 
 <h1>Cadastrar Fornecedor</h1>
 
-@TempData["Mensagem"]
-
 @using (Html.BeginForm("Cadastrar", "Fornecedor", FormMethod.Post))
 {
     @Html.LabelFor(m => m.Nome)
@@ -58,7 +56,7 @@
 
     @Html.LabelFor(m => m.DataNascimento)
 
-    @Html.EditorFor(m => m.DataNascimento)
+    @Html.EditorFor(m => m.DataNascimento, new { htmlAttributes = new { type="date" } })
 
     @Html.ValidationMessageFor(m => m.DataNascimento)
 

@@ -13,13 +13,13 @@ namespace FornecedoresEmpresa.ViewModel
     {
         public EmpresaViewModel()
         {
-            ListaFornecedor = new List<Fornecedor>();
             ListaIdFornecedor = new List<int>();
             SelectListaFornecedor = new List<SelectListItem>();
         }
 
         [Required(ErrorMessage = "Preencha o campo Uf")]
         [Display(Name = "UF")]
+        [StringLength(2)]
         public string Uf { get; set; }
 
         [Required(ErrorMessage = "Preencha o Nome Fantasia")]
@@ -31,9 +31,8 @@ namespace FornecedoresEmpresa.ViewModel
         [StringLength(14)]
         public string Cnpj { get; set; }
 
+        [Display(Name = "Fornecedores")]
         public List<int> ListaIdFornecedor { get; set; }
-
-        public List<Fornecedor> ListaFornecedor { get; set; }
 
         public List<SelectListItem> SelectListaFornecedor { get; set; }
     }
@@ -46,6 +45,8 @@ namespace FornecedoresEmpresa.ViewModel
     public class EmpresaViewModelDetalhes : EmpresaViewModel
     {
         public DateTime DataCadastro { get; set; }
+
+        public List<Fornecedor> ListaFornecedor { get; set; }
     }
 
     public class EmpresaViewModelAlterar : EmpresaViewModel

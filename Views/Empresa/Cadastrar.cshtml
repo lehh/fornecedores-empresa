@@ -4,40 +4,75 @@
     ViewData["Title"] = "Cadastrar Empresa";
 }
 
-<h1>Cadastrar Empresa</h1>
+@section scripts
+{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
+
+<div class="row">
+    <div class="col mb-3">
+        <h2>Cadastrar Empresa</h2>
+    </div>
+</div>
 
 @using (Html.BeginForm("Cadastrar", "Empresa", FormMethod.Post))
 {
-    @Html.LabelFor(m => m.NomeFantasia)
+    <div class="form-group row">
 
-    @Html.EditorFor(m => m.NomeFantasia)
+        @Html.LabelFor(m => m.NomeFantasia, new { @class = "col-form-label col-lg-2" })
 
-    @Html.ValidationMessageFor(m => m.NomeFantasia)
+        <div class="col-lg-5 col-10">
+            @Html.EditorFor(m => m.NomeFantasia, new { htmlAttributes = new { @class = "form-control" } })
 
-    @Html.LabelFor(m => m.Uf)
+            @Html.ValidationMessageFor(m => m.NomeFantasia)
+        </div>
 
-    @Html.EditorFor(m => m.Uf)
+    </div>
 
-    @Html.ValidationMessageFor(m => m.Uf)
+    <div class="form-group row">
 
-    @Html.LabelFor(m => m.Cnpj)
+        @Html.LabelFor(m => m.Uf, new { @class = "col-form-label col-lg-2" })
 
-    @Html.EditorFor(m => m.Cnpj)
+        <div class="col-lg-1 col-sm-2 col-3">
+            @Html.EditorFor(m => m.Uf, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+        <div class="mr-2">
+            @Html.ValidationMessageFor(m => m.Uf)
+        </div>
 
-    @Html.ValidationMessageFor(m => m.Cnpj)
+    </div>
 
-    @Html.LabelFor(m => m.ListaIdFornecedor)
+    <div class="form-group row">
 
-    @Html.ListBoxFor(m => m.ListaIdFornecedor, Model.SelectListaFornecedor)
+        @Html.LabelFor(m => m.Cnpj, new { @class = "col-form-label col-lg-2" })
 
-    @*<select multiple name="@nameof(Model.ListaIdFornecedor)">
-            @foreach (var fornecedor in Model.ListaFornecedor)
-            {
-                <option value="@fornecedor.Id">@fornecedor.Nome</option>
-            }
-        </select>*@
+        <div class="col-sm-4 col-3">
+            @Html.EditorFor(m => m.Cnpj, new { htmlAttributes = new { @class = "form-control" } })
 
-    <button type="submit">Cadastrar</button>
+            @Html.ValidationMessageFor(m => m.Cnpj)
+        </div>
+
+    </div>
+
+    <div class="form-group row">
+
+        @Html.LabelFor(m => m.ListaIdFornecedor, new { @class = "col-form-label col-lg-2" })
+        
+        <div class="col-6">
+            @Html.ListBoxFor(m => m.ListaIdFornecedor, Model.SelectListaFornecedor, new { @class = "custom-select" })
+        </div>
+
+    </div>
+
+    <div class="form-group row">
+        <div class="col mb-5">
+            <button class="btn btn-success" type="submit">Salvar</button>
+        </div>
+    </div>
 }
 
-<a href="@Url.ActionLink("Index")">Voltar</a>
+<div class="form-group row">
+    <div class="col">
+        <a class="btn btn-sm btn-secondary" href="@Url.ActionLink("Index")">Voltar</a>
+    </div>
+</div>

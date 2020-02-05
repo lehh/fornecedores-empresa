@@ -38,8 +38,6 @@
 
 <h1>Alterar Fornecedor</h1>
 
-@TempData["Mensagem"]
-
 @using (Html.BeginForm("Alterar", "Fornecedor", FormMethod.Post))
 {
     @Html.LabelFor(m => m.Nome)
@@ -68,7 +66,7 @@
 
     @Html.LabelFor(m => m.DataNascimento)
 
-    @Html.EditorFor(m => m.DataNascimento)
+    @Html.EditorFor(m => m.DataNascimento, new { htmlAttributes = new { type="date" } })
 
     @Html.ValidationMessageFor(m => m.DataNascimento)
 
