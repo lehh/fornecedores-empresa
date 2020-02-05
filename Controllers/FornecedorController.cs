@@ -126,7 +126,8 @@ namespace FornecedoresEmpresa.Controllers
                 DataNascimento = fornecedor.DataNascimento,
                 Nome = fornecedor.Nome,
                 Rg = fornecedor.Rg,
-                ListaTelefoneFornecedor = listaModelTelefone
+                ListaTelefoneFornecedor = listaModelTelefone,
+                TipoPessoa = fornecedor.Cpf == null ? "PJ" : "PF"
             };
 
             return View(model);

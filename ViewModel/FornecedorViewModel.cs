@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using FornecedoresEmpresa.Models;
 using ExpressiveAnnotations.Attributes;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FornecedoresEmpresa.ViewModel
 {
@@ -19,34 +20,53 @@ namespace FornecedoresEmpresa.ViewModel
         [Display(Name = "Nome")]
         public string Nome { get; set; }
 
-        [RequiredIf("Cnpj == null", ErrorMessage = "Preencha o CPF")]
+        [RequiredIf("TipoPessoa == 'PF'", ErrorMessage = "Preencha o CPF")]
         [Display(Name = "CPF")]
         [StringLength(11)]
         public string Cpf { get; set; }
 
-        [RequiredIf("Cpf == null", ErrorMessage = "Preencha o CNPJ")]
+        [RequiredIf("TipoPessoa == 'PJ'", ErrorMessage = "Preencha o CNPJ")]
         [AssertThat("Cpf != null ? Cnpj == null : true", ErrorMessage = "Apenas o CNPJ ou CPF deve ser preenchido")]
         [Display(Name = "CNPJ")]
         [StringLength(14)]
         public string Cnpj { get; set; }
 
-        [RequiredIf("Cpf != null", ErrorMessage = "Preencha o RG")]
+        [RequiredIf("TipoPessoa == 'PF'", ErrorMessage = "Preencha o RG")]
         [AssertThat("Cnpj != null ? Rg == null : true", ErrorMessage = "Pessoa jurídica não precisa informar o RG")]
         [Display(Name = "RG")]
         [StringLength(14)]
         public string Rg { get; set; }
 
-        [RequiredIf("Cpf != null", ErrorMessage = "Preencha a Data de Nascimento")]
+        [RequiredIf("TipoPessoa == 'PF'", ErrorMessage = "Preencha a Data de Nascimento")]
         [AssertThat("Cnpj != null ? DataNascimento == null : true", ErrorMessage = "Pessoa jurídica não precisa informar data de nascimento")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Display(Name = "Data de Nascimento")]
         public Nullable<DateTime> DataNascimento { get; set; }
 
+        [Display(Name = "Tipo Pessoa")]
+        public string TipoPessoa { get; set; }
+
         public List<TelefoneFornecedorPartialViewModel> ListaTelefoneFornecedor { get; set; }
+
+        #region ListagemTipoPessoa
+        public List<SelectListItem> ListaTipoPessoa
+        {
+            get
+            {
+                var listaSelectList = new List<SelectListItem>();
+
+                listaSelectList.Add(new SelectListItem("Pessoa Física", "PF"));
+                listaSelectList.Add(new SelectListItem("Pessoa Jurídica", "PJ"));
+
+                return listaSelectList;
+            }
+        }
+        #endregion
     }
 
     public class FornecedorViewModelCadastro : FornecedorViewModel
     {
-
+        
     }
 
     public class FornecedorViewModelAlterar : FornecedorViewModel

@@ -9,9 +9,11 @@
 
 @section scripts
 {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
     <script async src="~/js/fornecedor.js"></script>
     <script>
         $(document).ready(function () {
+            showHideInputs($("#selectTipoPessoa").children("option:selected").val());
 
             $("#adicionarTelefone").on("click", function (event) {
                 event.preventDefault();
@@ -22,63 +24,134 @@
                 ajaxAdicionaTelefone(this.href, nomeLista, indice, divId);
             });
 
+            $("#selectTipoPessoa").on("change", function () {
+                $("#selectTipoPessoa option[value='']").remove();
+                showHideInputs(this.value);
+            });
+
         });
+
+        function showHideInputs(valorSelect) {
+            let pessoaFisica = $(".pessoa-fisica");
+            let pessoaJuridica = $(".pessoa-juridica");
+
+            if (!valorSelect)
+                return;
+
+            $("#itensFormulario").removeClass("d-none");
+
+            if (valorSelect == "PF") {
+                pessoaFisica.show();
+                pessoaJuridica.hide();
+                return;
+            }
+            if (valorSelect == "PJ") {
+                pessoaJuridica.show();
+                pessoaFisica.hide();
+                return;
+            }
+        }
     </script>
 }
 
-<h1>Cadastrar Fornecedor</h1>
+<div class="row">
+    <div class="col mb-3">
+        <h2>Cadastrar Fornecedor</h2>
+    </div>
+</div>
 
 @using (Html.BeginForm("Cadastrar", "Fornecedor", FormMethod.Post))
 {
-    @Html.LabelFor(m => m.Nome)
-
-    @Html.EditorFor(m => m.Nome)
-
-    @Html.ValidationMessageFor(m => m.Nome)
-
-    @Html.LabelFor(m => m.Cpf)
-
-    @Html.EditorFor(m => m.Cpf)
-
-    @Html.ValidationMessageFor(m => m.Cpf)
-
-    @Html.LabelFor(m => m.Rg)
-
-    @Html.EditorFor(m => m.Rg)
-
-    @Html.ValidationMessageFor(m => m.Rg)
-
-    @Html.LabelFor(m => m.Cnpj)
-
-    @Html.EditorFor(m => m.Cnpj)
-
-    @Html.ValidationMessageFor(m => m.Cnpj)
-
-    @Html.LabelFor(m => m.DataNascimento)
-
-    @Html.EditorFor(m => m.DataNascimento, new { htmlAttributes = new { type="date" } })
-
-    @Html.ValidationMessageFor(m => m.DataNascimento)
-
-    <a href="@Url.ActionLink("AdicionarTelefone")" id="adicionarTelefone">addTel</a>
-
-    <div id="telefonesDiv">
-        @foreach (var telefone in Model.ListaTelefoneFornecedor)
-        {
-            telefone.NomeLista = nomeLista;
-            telefone.Indice = contadorTelefone;
-            telefone.DivId = prefixoDivId + contadorTelefone;
-
-            {
-                await Html.RenderPartialAsync("_TelefoneFornecedor", telefone);
-            }
-
-            contadorTelefone++;
-        }
+    <div class="form-group row">
+        @Html.LabelFor(m => m.TipoPessoa, new { @class = "col-form-label col-lg-2" })
+        <div class="col-lg-3 col-4">
+            @Html.DropDownListFor(m => m.TipoPessoa, Model.ListaTipoPessoa, "Selecione uma Opção", new { @class = "form-control", id = "selectTipoPessoa", required = "true" })
+        </div>
     </div>
 
+    <div id="itensFormulario" class="d-none">
+        <div class="form-group row">
+            @Html.LabelFor(m => m.Nome, new { @class = "col-form-label col-lg-2" })
 
-    <button type="submit">Cadastrar</button>
+            <div class="col-lg-5 col-10">
+                @Html.EditorFor(m => m.Nome, new { htmlAttributes = new { @class = "form-control" } })
+
+                @Html.ValidationMessageFor(m => m.Nome)
+            </div>
+        </div>
+
+        <div class="form-group row pessoa-fisica">
+            @Html.LabelFor(m => m.Cpf, new { @class = "col-form-label col-lg-2" })
+
+            <div class="col-sm-4 col-3">
+                @Html.EditorFor(m => m.Cpf, new { htmlAttributes = new { @class = "form-control" } })
+
+                @Html.ValidationMessageFor(m => m.Cpf)
+            </div>
+        </div>
+
+        <div class="form-group row pessoa-fisica">
+            @Html.LabelFor(m => m.Rg, new { @class = "col-form-label col-lg-2" })
+
+            <div class="col-sm-4 col-3">
+                @Html.EditorFor(m => m.Rg, new { htmlAttributes = new { @class = "form-control" } })
+
+                @Html.ValidationMessageFor(m => m.Rg)
+            </div>
+        </div>
+
+        <div class="form-group row pessoa-juridica">
+            @Html.LabelFor(m => m.Cnpj, new { @class = "col-form-label col-lg-2" })
+
+            <div class="col-sm-4 col-3">
+                @Html.EditorFor(m => m.Cnpj, new { htmlAttributes = new { @class = "form-control" } })
+
+                @Html.ValidationMessageFor(m => m.Cnpj)
+            </div>
+        </div>
+
+        <div class="form-group row pessoa-fisica">
+            @Html.LabelFor(m => m.DataNascimento, new { @class = "col-form-label col-lg-2" })
+
+            <div class="col-lg-3 col-4">
+                @Html.EditorFor(m => m.DataNascimento, new { htmlAttributes = new { type = "date", @class = "form-control" } })
+
+                @Html.ValidationMessageFor(m => m.DataNascimento)
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-2 mt-5">
+                <a class="btn btn-sm btn-success" href="@Url.ActionLink("AdicionarTelefone")" id="adicionarTelefone">+ Número</a>
+            </div>
+
+            <div class="col-lg-3 col-4 mt-5" id="telefonesDiv">
+                @foreach (var telefone in Model.ListaTelefoneFornecedor)
+                {
+                    telefone.NomeLista = nomeLista;
+                    telefone.Indice = contadorTelefone;
+                    telefone.DivId = prefixoDivId + contadorTelefone;
+
+                    {
+                        await Html.RenderPartialAsync("_TelefoneFornecedor", telefone);
+                    }
+
+                    contadorTelefone++;
+                }
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col mt-4">
+                <button class="btn btn-success" type="submit">Cadastrar</button>
+            </div>
+        </div>
+
+    </div>
 }
 
-<a href="@Url.ActionLink("Index")">Voltar</a>
+<div class="form-group row">
+    <div class="col">
+        <a class="btn btn-sm btn-secondary" href="@Url.ActionLink("Index")">Voltar</a>
+    </div>
+</div>

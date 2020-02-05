@@ -6,13 +6,15 @@
     var nameId = name + nameof(Model.Id);
     Layout = "";
 }
-<div id="@Model.DivId">
+<div id="@Model.DivId" class="mb-3">
     @Html.Hidden((string)nameId, Model.Id)
-    @Html.LabelFor(m => m.Numero)
+    @Html.LabelFor(m => m.Numero, new { @class = "sr-only" })
 
-    @Html.EditorFor(m => m.Numero, "name", (string)nameNumero, new { htmlAttributes = new { @class = "form-control telefones" } })
-
-    <button id="remover-@Model.DivId" class="btnRemover">x</button>
+    @Html.EditorFor(m => m.Numero, "name", (string)nameNumero, new { htmlAttributes = new { @class = "form-control telefones", placeholder = "Número de Telefone" } })
 
     @Html.ValidationMessageFor(m => m.Numero, null, new { @data_valmsg_for = (string)nameNumero })
+
+    <button type="button" id="remover-@Model.DivId" class="btnRemover btn btn-sm btn-danger float-right mt-3" aria-label="Close">
+        Remover
+    </button>
 </div>
